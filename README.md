@@ -7,7 +7,10 @@ Native Lua 5.2/LuaJIT RC4 stream cipher library
 
 ## Lua Compatibility
 
-
+| Version | Module Dependencies | Remark | 
+| ------- | ------------------- | ------ |
+| Lua 5.2        | `bit32`      |                        |
+| LuaJIT 2.0/2.1 | `ffi`, `bit` | ffi C struct optimized |
 
 ## Usage
 
@@ -35,15 +38,20 @@ assert(msg_from_server_2 == decrypted_msg_2)
 ## Test and Benchmark
 
 ```bash
-# Lua 5.2
-$ lua rc4.lua 200000
-RC4 keygen test    25.420 sec (200000 times, #key 8)
-RC4 crypt test    180.720 sec (200000 times, #key 8, #input 512)
+# Lua 5.2.4
+$ lua rc4.lua
+RC4 keygen test    10.250 sec (100000 times, #key 8)
+RC4 crypt test     68.980 sec (100000 times, #key 8, #input 512)
+
+# LuaJIT 2.0.3
+$ luajit-2.0.3 rc4.lua
+RC4 keygen test     0.310 sec (100000 times, #key 8)
+RC4 crypt test      0.800 sec (100000 times, #key 8, #input 512)
 
 # LuaJIT 2.1 alpha
-$ luajit-2.1.0-alpha rc4.lua 200000
-RC4 keygen test     0.780 sec (200000 times, #key 8)
-RC4 crypt test      1.700 sec (200000 times, #key 8, #input 512)
+$ luajit-2.1.0-alpha rc4.lua
+RC4 keygen test     0.280 sec (100000 times, #key 8)
+RC4 crypt test      0.740 sec (100000 times, #key 8, #input 512)
 ```
 
 ## License

@@ -28,7 +28,7 @@ before_script:
     # back to home directory
     - cd $TRAVIS_BUILD_DIR
     # check executables
-    - which $LUA_BIN
+    - which $LUA_BIN 2>/dev/null && $LUA_BIN -v
 
 script:
     - $LUA_BIN rc4.lua
