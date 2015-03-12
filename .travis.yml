@@ -20,11 +20,9 @@ install:
     # install LuaJIT
     - cd $DEPS_BUILD_DIR
     - if [ "$LUA" == "luajit" ]; then
-          git clone -b $LJ_BR $LJ_REPO luajit2.git && cd luajit2.git
-          sudo make PREFIX=$DEPS_PREFIX XCFLAGS+="-DLUAJIT_ENABLE_LUA52COMPAT" install
-      else
-          sudo apt-get install $LUA
+          git clone -b $LJ_BR $LJ_REPO luajit2.git && cd luajit2.git && sudo make PREFIX=$DEPS_PREFIX XCFLAGS+="-DLUAJIT_ENABLE_LUA52COMPAT" install;
       fi
+    - if [ "$LUA" != "luajit" ]; then sudo apt-get install $LUA; fi
 
 before_script:
     # back to home directory
