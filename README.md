@@ -40,9 +40,14 @@ assert(msg_from_server_2 == decrypted_msg_2)
 
 ```bash
 # Lua 5.2.4
-$ lua rc4.lua
+$ lua52 rc4.lua
 RC4 keygen test    10.250 sec (100000 times, #key 8)
 RC4 crypt test     68.980 sec (100000 times, #key 8, #input 512)
+
+# Lua 5.3.0
+$ lua53 rc4.lua
+RC4 keygen test    10.280 sec (100000 times, #key 8)
+RC4 crypt test     72.310 sec (100000 times, #key 8, #input 512)
 
 # LuaJIT 2.0.3
 $ luajit-2.0.3 rc4.lua
