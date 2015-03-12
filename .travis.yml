@@ -1,0 +1,41 @@
+# ref: http://docs.travis-ci.com/user/build-configuration
+
+language: erlang
+
+env:
+    global:
+        - DEPS_BUILD_DIR=$TRAVIS_BUILD_DIR/deps
+        - DEPS_PREFIX=/usr/local
+        - LJ_REPO="http://luajit.org/git/luajit-2.0.git"
+    matrix:
+        - LUA=lua5.2 LUA_BIN=lua
+        - LUA=luajit LUA_BIN=luajit             LJ_BR=master
+        - LUA=luajit LUA_BIN=luajit-2.1.0-alpha LJ_BR=v2.1
+
+before_install:
+    - mkdir -p $DEPS_BUILD_DIR
+    - sudo apt-get update -q
+
+install:
+    # install LuaJIT
+    - cd $DEPS_BUILD_DIR
+    - if [ "$LUA" == "luajit" ]; then
+          git clone -b $LJ_BR $LJ_REPO luajit2.git && cd luajit2.git
+          sudo make PREFIX=$DEPS_PREFIX XCFLAGS+="-DLUAJIT_ENABLE_LUA52COMPAT" install
+      else
+          sudo apt-get install $LUA
+      fi
+
+before_script:
+    # back to home directory
+    - cd $TRAVIS_BUILD_DIR
+    # check executables
+    - which $LUA_BIN
+
+script:
+    - $LUA_BIN rc4.lua
+
+notifications:
+    email:
+        on_success: change
+        on_failure: always
