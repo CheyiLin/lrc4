@@ -3,13 +3,14 @@ lrc4
 
 [![travis-ci status](https://travis-ci.org/CheyiLin/lrc4.svg?branch=master)](https://travis-ci.org/CheyiLin/lrc4)
 
-Native Lua 5.2/LuaJIT RC4 stream cipher library
+Native Lua/LuaJIT RC4 stream cipher library
 
 ## Lua Compatibility
 
 | Version | Module Dependencies | Remark | 
 | ------- | ------------------- | ------ |
-| Lua 5.2        | `bit32`      |                        |
+| Lua 5.2 | `bit32` |  |
+| Lua 5.3 | `bit32` | `bit32` has been deprecated |
 | LuaJIT 2.0/2.1 | `ffi`, `bit` | ffi C struct optimized |
 
 ## Usage

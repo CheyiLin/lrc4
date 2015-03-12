@@ -1,5 +1,5 @@
 --[[
-	lrc4 - RC4 library for Lua/LuaJIT - https://github.com/CheyiLin/lrc4
+	lrc4 - Native Lua/LuaJIT RC4 stream cipher library - https://github.com/CheyiLin/lrc4
 	
 	The MIT License (MIT)
 	
@@ -26,12 +26,11 @@
 
 local require = require
 local setmetatable = setmetatable
-local string, table = string, table
 
 local string_char = string.char
 local table_concat = table.concat
 
-local is_luajit, is_lua52
+local is_luajit
 local bit_xor, bit_and
 
 if jit and jit.version_num > 20000 then
@@ -39,7 +38,9 @@ if jit and jit.version_num > 20000 then
 	bit_xor = bit.bxor
 	bit_and = bit.band
 elseif _VERSION == "Lua 5.2" then
-	is_lua52 = true
+	bit_xor = bit32.bxor
+	bit_and = bit32.band
+elseif _VERSION == "Lua 5.3" and bit32 then
 	bit_xor = bit32.bxor
 	bit_and = bit32.band
 else
