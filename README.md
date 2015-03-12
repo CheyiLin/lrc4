@@ -3,11 +3,13 @@ lrc4
 
 [![travis-ci status](https://travis-ci.org/CheyiLin/lrc4.svg?branch=master)](https://travis-ci.org/CheyiLin/lrc4)
 
-Pure Lua/LuaJIT RC4 stream cipher library
+Native Lua 5.2/LuaJIT RC4 stream cipher library
+
+## Lua Compatibility
+
+
 
 ## Usage
-
-### Overview
 
 ```lua
 local rc4 = require("rc4")
@@ -30,8 +32,21 @@ local decrypted_msg_2 = rc4_ks_client(encrypted_msg_2)
 assert(msg_from_server_2 == decrypted_msg_2)
 ```
 
-License
--------
+## Test and Benchmark
+
+```bash
+# Lua 5.2
+$ lua rc4.lua 200000
+RC4 keygen test    25.420 sec (200000 times, #key 8)
+RC4 crypt test    180.720 sec (200000 times, #key 8, #input 512)
+
+# LuaJIT 2.1 alpha
+$ luajit-2.1.0-alpha rc4.lua 200000
+RC4 keygen test     0.780 sec (200000 times, #key 8)
+RC4 crypt test      1.700 sec (200000 times, #key 8, #input 512)
+```
+
+## License
 
 Copyright (c) 2015 Cheyi Lin.
 MIT licensed. See LICENSE for details.
