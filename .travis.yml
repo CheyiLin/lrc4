@@ -8,7 +8,7 @@ env:
     global:
         - DEPS_BUILD_DIR=$TRAVIS_BUILD_DIR/deps
         - DEPS_PREFIX=$DEPS_BUILD_DIR/dist
-        - DEPS_BIN_DIR=$DEPS_PREFIX/dist/bin
+        - DEPS_BIN_DIR=$DEPS_PREFIX/bin
         - LJ_REPO="http://luajit.org/git/luajit-2.0.git"
     matrix:
         - LUA=lua-5.2    LUA_TYPE=lua    LUA_BIN=lua     LUA_DIST=lua-5.2.4
@@ -34,8 +34,7 @@ before_script:
     # back to home directory
     - cd $TRAVIS_BUILD_DIR
     # update the path
-    - export PATH=$PATH:$DEPS_BIN_DIR
-    - echo $PATH
+    - export PATH=$DEPS_BIN_DIR:$PATH
     # check executables
     - which $LUA_BIN 2>/dev/null && $LUA_BIN -v
 
