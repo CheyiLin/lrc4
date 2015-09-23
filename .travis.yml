@@ -2,10 +2,13 @@
 
 language: erlang
 
+sudo: false
+
 env:
     global:
         - DEPS_BUILD_DIR=$TRAVIS_BUILD_DIR/deps
-        - DEPS_PREFIX=/usr/local
+        - DEPS_PREFIX=$DEPS_BUILD_DIR/dist
+        - DEPS_BIN_DIR=$DEPS_PREFIX/dist/bin
         - LJ_REPO="http://luajit.org/git/luajit-2.0.git"
     matrix:
         - LUA=lua-5.2    LUA_TYPE=lua    LUA_BIN=lua     LUA_DIST=lua-5.2.4
@@ -15,21 +18,23 @@ env:
 
 before_install:
     - mkdir -p $DEPS_BUILD_DIR
-    - sudo apt-get update -q
+    #- sudo apt-get update -q
 
 install:
     # install LuaJIT
     - cd $DEPS_BUILD_DIR
     - if [ "$LUA_TYPE" == "luajit" ]; then
-          git clone -b $LJ_BR $LJ_REPO luajit2.git && cd luajit2.git && sudo make PREFIX=$DEPS_PREFIX XCFLAGS+="-DLUAJIT_ENABLE_LUA52COMPAT" install;
+          git clone -b $LJ_BR $LJ_REPO luajit2.git && cd luajit2.git && make PREFIX=$DEPS_PREFIX XCFLAGS+="-DLUAJIT_ENABLE_LUA52COMPAT" install;
       fi
     - if [ "$LUA_TYPE" == "lua" ]; then
-          wget "http://www.lua.org/ftp/$LUA_DIST.tar.gz" && tar xzf $LUA_DIST.tar.gz && cd $LUA_DIST && sudo make linux test install;
+          wget "http://www.lua.org/ftp/$LUA_DIST.tar.gz" && tar xzf $LUA_DIST.tar.gz && cd $LUA_DIST && make linux test install INSTALL_TOP=$DEPS_PREFIX;
       fi
 
 before_script:
     # back to home directory
     - cd $TRAVIS_BUILD_DIR
+    # update the path
+    - export PATH=$PATH:$DEPS_BIN_DIR
     # check executables
     - which $LUA_BIN 2>/dev/null && $LUA_BIN -v
 
