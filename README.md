@@ -44,18 +44,18 @@ $ lua52 rc4.lua
 RC4 keygen test    10.250 sec (100000 times, #key 8)
 RC4 crypt test     68.980 sec (100000 times, #key 8, #input 512)
 
-# Lua 5.3.0
+# Lua 5.3.1
 $ lua53 rc4.lua
 RC4 keygen test    10.280 sec (100000 times, #key 8)
 RC4 crypt test     72.310 sec (100000 times, #key 8, #input 512)
 
-# LuaJIT 2.0.3
-$ luajit-2.0.3 rc4.lua
+# LuaJIT 2.0.4
+$ luajit-2.0.4 rc4.lua
 RC4 keygen test     0.310 sec (100000 times, #key 8)
 RC4 crypt test      0.800 sec (100000 times, #key 8, #input 512)
 
-# LuaJIT 2.1 alpha
-$ luajit-2.1.0-alpha rc4.lua
+# LuaJIT 2.1.0 beta1
+$ luajit-2.1.0-beta1 rc4.lua
 RC4 keygen test     0.280 sec (100000 times, #key 8)
 RC4 crypt test      0.740 sec (100000 times, #key 8, #input 512)
 ```

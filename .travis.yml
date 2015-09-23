@@ -11,7 +11,7 @@ env:
         - LUA=lua-5.2    LUA_TYPE=lua    LUA_BIN=lua     LUA_DIST=lua-5.2.4
         - LUA=lua-5.3    LUA_TYPE=lua    LUA_BIN=lua     LUA_DIST=lua-5.3.1
         - LUA=luajit-2.0 LUA_TYPE=luajit LUA_BIN=luajit             LJ_BR=master
-        - LUA=luajit-2.1 LUA_TYPE=luajit LUA_BIN=luajit-2.1.0-alpha LJ_BR=v2.1
+        - LUA=luajit-2.1 LUA_TYPE=luajit LUA_BIN=luajit-2.1.0-beta1 LJ_BR=v2.1
 
 before_install:
     - mkdir -p $DEPS_BUILD_DIR
