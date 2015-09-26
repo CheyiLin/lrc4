@@ -47,7 +47,7 @@ else
 	error("unsupported Lua version")
 end
 
-local new_ks, rc4_crypy
+local new_ks, rc4_crypt
 
 if is_luajit then
 	-- LuaJIT ffi implementation
@@ -81,7 +81,7 @@ if is_luajit then
 			return {x=idx_ct(), y=idx_ct(), st=st}
 		end
 	
-	rc4_crypy =
+	rc4_crypt =
 		function (ks, input)
 			local x, y, st = ks.x, ks.y, ks.st
 			
@@ -115,7 +115,7 @@ else
 			return {x=0, y=0, st=st}
 		end
 	
-	rc4_crypy =
+	rc4_crypt =
 		function (ks, input)
 			local x, y, st = ks.x, ks.y, ks.st
 			
@@ -134,7 +134,7 @@ end
 
 local function new_rc4(m, key)
 	local o = new_ks(key)
-	return setmetatable(o, {__call=rc4_crypy, __metatable=false})
+	return setmetatable(o, {__call=rc4_crypt, __metatable=false})
 end
 
 -- self testing
