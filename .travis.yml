@@ -9,7 +9,7 @@ env:
         - DEPS_BUILD_DIR=$TRAVIS_BUILD_DIR/deps
         - DEPS_PREFIX=$DEPS_BUILD_DIR/dist
         - DEPS_BIN_DIR=$DEPS_PREFIX/bin
-        - LJ_REPO="http://luajit.org/git/luajit-2.0.git"
+        - LJ_REPO="https://github.com/LuaJIT/LuaJIT.git"
     matrix:
         - LUA=lua-5.2    LUA_TYPE=lua    LUA_BIN=lua     LUA_DIST=lua-5.2.4
         - LUA=lua-5.3    LUA_TYPE=lua    LUA_BIN=lua     LUA_DIST=lua-5.3.2
