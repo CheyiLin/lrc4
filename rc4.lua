@@ -176,7 +176,7 @@ local function new_rc4(m, key)
 end
 
 -- self testing
-if arg then
+if (not ...) or (arg and ... == arg[1]) then
 	local os_clock = os.clock
 	local function printf(fmt, ...) io.write(string.format(fmt, ...), "\n") end
 	
