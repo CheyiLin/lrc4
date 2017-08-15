@@ -4,6 +4,7 @@
 	The MIT License (MIT)
 	
 	Copyright (c) 2015 Cheyi Lin <cheyi.lin@gmail.com>
+	Copyright (c) 2017 Soni L. <soniex2 at gmail dot com>
 	
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +34,8 @@ local table_concat = table.concat
 local is_luajit
 local bit_xor, bit_and
 
+local load = load
+
 if jit and jit.version_num > 20000 then
 	is_luajit = true
 	bit_xor = bit.bxor
@@ -40,14 +43,39 @@ if jit and jit.version_num > 20000 then
 elseif _VERSION == "Lua 5.2" then
 	bit_xor = bit32.bxor
 	bit_and = bit32.band
-elseif _VERSION == "Lua 5.3" and bit32 then
-	bit_xor = bit32.bxor
-	bit_and = bit32.band
+elseif _VERSION == "Lua 5.3" then
+	bit_xor = load "return function(a, b) return a ~ b end" ()
+	bit_and = load "return function(a, b) return a & b end" ()
 else
 	error("unsupported Lua version")
 end
 
 local new_ks, rc4_crypt
+
+local pattern = "@([a-zA-Z0-9_]+)(%b())(%b())"
+local function preprocessor(cmd, arg1, arg2) -- huge performance boost
+	-- process args too
+	arg1 = arg1:gsub(pattern, preprocessor)
+	arg2 = arg2:gsub(pattern, preprocessor)
+	if cmd == "bit_xor" then
+		if _VERSION == "Lua 5.3" then
+			return "(" .. arg1 .. " ~ " .. arg2 .. ")"
+		else
+			return "bit_xor(" .. arg1 .. "," .. arg2 .. ")"
+		end
+	elseif cmd == "bit_and" then
+		if _VERSION == "Lua 5.3" then
+			return "(" .. arg1 .. " & " .. arg2 .. ")"
+		else
+			if arg2 == "(255)" then
+				return "(" .. arg1 .. " % 256)"
+			else
+				return "bit_and(" .. arg1 .. "," .. arg2 .. ")"
+			end
+		end
+	end
+	error("unreachable")
+end
 
 if is_luajit then
 	-- LuaJIT ffi implementation
@@ -93,7 +121,7 @@ if is_luajit then
 				x.v = x.v + 1
 				y.v = y.v + st[x.v]
 				st[x.v], st[y.v] = st[y.v], st[x.v]
-				buf[i] = bit_xor(buf[i], st[(st[x.v] + st[y.v]) % 256])
+				buf[i] = bit_xor(buf[i], st[bit_and(st[x.v] + st[y.v], 255)])
 			end
 			
 			return ffi_string(buf, input_len)
@@ -101,35 +129,45 @@ if is_luajit then
 else
 	-- plain Lua implementation
 	new_ks =
-		function (key)
+		assert(load(([[
+		local string_byte = string.byte
+		local bit_xor, bit_and = ...
+		return function (key)
 			local st = {}
 			for i = 0, 255 do st[i] = i end
 			
 			local len = #key
 			local j = 0
 			for i = 0, 255 do
-				j = (j + st[i] + key:byte((i % len) + 1)) % 256
+				j = @bit_and(j + st[i] + string_byte(key, (i % len) + 1))(255)
 				st[i], st[j] = st[j], st[i]
 			end
 			
 			return {x=0, y=0, st=st}
 		end
+		]]):gsub(pattern, preprocessor)))(bit_xor, bit_and)
 	
 	rc4_crypt =
-		function (ks, input)
+		assert(load(([[
+		local string_char = string.char
+		local string_byte = string.byte
+		local table_concat = table.concat
+		local bit_xor, bit_and = ...
+		return function (ks, input)
 			local x, y, st = ks.x, ks.y, ks.st
 			
 			local t = {}
 			for i = 1, #input do
-				x = (x + 1) % 256
-				y = (y + st[x]) % 256;
+				x = @bit_and(x + 1)(255)
+				y = @bit_and(y + st[x])(255)
 				st[x], st[y] = st[y], st[x]
-				t[i] = string_char(bit_xor(input:byte(i), st[(st[x] + st[y]) % 256]))
+				t[i] = string_char(@bit_xor(string_byte(input, i))(st[@bit_and(st[x] + st[y])(255)]))
 			end
 			
 			ks.x, ks.y = x, y
 			return table_concat(t)
 		end
+		]]):gsub(pattern, preprocessor)))(bit_xor, bit_and)
 end
 
 local function new_rc4(m, key)
@@ -138,7 +176,7 @@ local function new_rc4(m, key)
 end
 
 -- self testing
-if arg then
+if (not ...) or (arg and ... == arg[1]) then
 	local os_clock = os.clock
 	local function printf(fmt, ...) io.write(string.format(fmt, ...), "\n") end
 	

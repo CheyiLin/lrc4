@@ -10,7 +10,7 @@ Native Lua/LuaJIT RC4 stream cipher library
 | Version | Module Dependencies | Remark | 
 | ------- | ------------------- | ------ |
 | Lua 5.2 | `bit32` |  |
-| Lua 5.3 | `bit32` | `bit32` has been deprecated |
+| Lua 5.3 |  |  |
 | LuaJIT 2.0/2.1 | `ffi`, `bit` | ffi C struct optimized |
 
 ## Usage
@@ -63,4 +63,5 @@ RC4 crypt test      0.740 sec (100000 times, #key 8, #input 512)
 ## License
 
 Copyright (c) 2015 Cheyi Lin.
+Copyright (c) 2017 Soni L.
 MIT licensed. See LICENSE for details.
