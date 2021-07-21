@@ -38,8 +38,9 @@ if jit and jit.version_num > 20000 then
 	bit_xor = bit.bxor
 elseif _VERSION == "Lua 5.2" then
 	bit_xor = bit32.bxor
-elseif _VERSION == "Lua 5.3" and bit32 then
-	bit_xor = bit32.bxor
+elseif _VERSION == "Lua 5.3" or _VERSION == "Lua 5.4" then
+	local bitwise = require("bitwise")
+	bit_xor = bitwise.xor
 else
 	error("unsupported Lua version")
 end
