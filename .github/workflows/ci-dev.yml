@@ -1,0 +1,55 @@
+# https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
+name: ci-dev
+on:
+  push:
+    branches:
+      - master
+    tags-ignore:
+      - "*"
+    paths-ignore:
+      - README.md
+jobs:
+  build:
+    name: CI
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - version: lua-5.2
+            url: https://www.lua.org/ftp/lua-5.2.4.tar.gz
+            extract: tar xzf lua-5.2.4.tar.gz
+            dir: lua-5.2.4
+            build: make
+            lua: src/lua
+          - version: lua-5.3
+            url: https://www.lua.org/ftp/lua-5.3.6.tar.gz
+            extract: tar xzf lua-5.3.6.tar.gz
+            dir: lua-5.3.6
+            build: make
+            lua: src/lua
+          - version: lua-5.4
+            url: https://www.lua.org/ftp/lua-5.4.3.tar.gz
+            extract: tar xzf lua-5.4.3.tar.gz
+            dir: lua-5.4.3
+            build: make
+            lua: src/lua
+          - version: luajit-2.1
+            url: https://github.com/openresty/luajit2/archive/refs/tags/v2.1-20210510.zip
+            extract: unzip v2.1-20210510.zip
+            dir: luajit2-2.1-20210510
+            build: make
+            lua: src/luajit
+    steps:
+      - name: Extract tag
+        id: tag
+        run: echo ::set-output name=TAG_NAME::${GITHUB_REF#refs/tags/}
+      - name: Build
+        working-directory: /tmp
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -SfLO ${{ matrix.url }}
+          ${{ matrix.extract }}
+          cd ${{ matrix.dir }}
+          ${{ matrix.build }}
+          ${{ matrix.lua }} -v
