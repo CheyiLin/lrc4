@@ -13,25 +13,26 @@ jobs:
     name: CI
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: lua-5.2
             url: https://www.lua.org/ftp/lua-5.2.4.tar.gz
             extract: tar xzf lua-5.2.4.tar.gz
             dir: lua-5.2.4
-            build: make
+            build: make linux
             lua: src/lua
           - version: lua-5.3
             url: https://www.lua.org/ftp/lua-5.3.6.tar.gz
             extract: tar xzf lua-5.3.6.tar.gz
             dir: lua-5.3.6
-            build: make
+            build: make linux
             lua: src/lua
           - version: lua-5.4
             url: https://www.lua.org/ftp/lua-5.4.3.tar.gz
             extract: tar xzf lua-5.4.3.tar.gz
             dir: lua-5.4.3
-            build: make
+            build: make linux
             lua: src/lua
           - version: luajit-2.1
             url: https://github.com/openresty/luajit2/archive/refs/tags/v2.1-20210510.zip
