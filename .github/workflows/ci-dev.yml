@@ -41,7 +41,7 @@ jobs:
             build: make
             lua: src/luajit
     env:
-      LUA_CMD: /tmp/lua
+      LUA_CMD: build/lua
     steps:
       - name: Extract tag
         id: tag
@@ -49,7 +49,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build
-        working-directory: /tmp
+        working-directory: build
         shell: bash
         run: |
           set -euo pipefail
@@ -58,7 +58,8 @@ jobs:
           cd ${{ matrix.dir }}
           ${{ matrix.build }}
           ${{ matrix.lua }} -v
-          ln -s ${{ matrix.lua }} ${{ env.LUA_CMD }}
+          ln -sf ${{ matrix.lua }} ${{ env.LUA_CMD }}
+          ls -l ${{ env.LUA_CMD }}
       - name: Test
         shell: bash
         run: |
