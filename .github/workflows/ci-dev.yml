@@ -40,10 +40,14 @@ jobs:
             dir: luajit2-2.1-20210510
             build: make
             lua: src/luajit
+    env:
+      LUA_CMD: /tmp/lua
     steps:
       - name: Extract tag
         id: tag
         run: echo ::set-output name=TAG_NAME::${GITHUB_REF#refs/tags/}
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Build
         working-directory: /tmp
         shell: bash
@@ -54,3 +58,10 @@ jobs:
           cd ${{ matrix.dir }}
           ${{ matrix.build }}
           ${{ matrix.lua }} -v
+          ln -s ${{ matrix.lua }} ${{ env.LUA_CMD }}
+      - name: Test
+        shell: bash
+        run: |
+          set -euo pipefail
+          ${{ env.LUA_CMD }} -v
+          ${{ env.LUA_CMD }} ${{ env.GITHUB_WORKSPACE }}/rc4.lua
