@@ -40,8 +40,7 @@ jobs:
             dir: luajit2-2.1-20210510
             build: make
             lua: src/luajit
-    env:
-      LUA_CMD: build/lua
+    env: {}
     steps:
       - name: Extract tag
         id: tag
@@ -49,20 +48,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build
-        working-directory: build
         shell: bash
         run: |
           set -euo pipefail
           curl -SfLO ${{ matrix.url }}
           ${{ matrix.extract }}
-          cd ${{ matrix.dir }}
+          pushd ${{ matrix.dir }}
           ${{ matrix.build }}
           ${{ matrix.lua }} -v
-          ln -sf ${{ matrix.lua }} ${{ env.LUA_CMD }}
-          ls -l ${{ env.LUA_CMD }}
+          popd
+          ln -sf ${{ matrix.dir }}/${{ matrix.lua }} lua
+          ls -l lua
       - name: Test
         shell: bash
         run: |
           set -euo pipefail
-          ${{ env.LUA_CMD }} -v
-          ${{ env.LUA_CMD }} ${{ env.GITHUB_WORKSPACE }}/rc4.lua
+          ./lua -v
+          ./lua rc4.lua
