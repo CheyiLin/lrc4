@@ -36,13 +36,13 @@ jobs:
             lua: src/lua
           - version: luajit-2.0
             url: https://github.com/LuaJIT/LuaJIT/archive/refs/tags/v2.0.5.tar.gz
-            extract: tar xzf LuaJIT-2.0.5.tar.gz
+            extract: tar xzf v2.0.5.tar.gz
             dir: LuaJIT-2.0.5
             build: make
             lua: src/luajit
           - version: luajit-2.1
             url: https://github.com/openresty/luajit2/archive/refs/tags/v2.1-20210510.tar.gz
-            extract: tar xzf luajit2-2.1-20210510.tar.gz
+            extract: tar xzf v2.1-20210510.tar.gz
             dir: luajit2-2.1-20210510
             build: make
             lua: src/luajit
