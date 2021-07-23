@@ -40,28 +40,33 @@ assert(msg_from_server_2 == decrypted_msg_2)
 ## Test and Benchmark
 
 ```bash
-# Lua 5.2.4
+# Lua 5.2.4  Copyright (C) 1994-2015 Lua.org, PUC-Rio
 $ lua52 rc4.lua
-RC4 keygen test    10.250 sec (100000 times, #key 8)
-RC4 crypt test     68.980 sec (100000 times, #key 8, #input 512)
+RC4 keygen test     5.014 sec (100000 times, #key 8)
+RC4 crypt test     40.658 sec (100000 times, #key 8, #input 512)
 
-# Lua 5.3.1
+# Lua 5.3.6  Copyright (C) 1994-2020 Lua.org, PUC-Rio
 $ lua53 rc4.lua
-RC4 keygen test    10.280 sec (100000 times, #key 8)
-RC4 crypt test     72.310 sec (100000 times, #key 8, #input 512)
+RC4 keygen test     4.755 sec (100000 times, #key 8)
+RC4 crypt test     35.481 sec (100000 times, #key 8, #input 512)
 
-# LuaJIT 2.0.4
-$ luajit-2.0.4 rc4.lua
-RC4 keygen test     0.310 sec (100000 times, #key 8)
-RC4 crypt test      0.800 sec (100000 times, #key 8, #input 512)
+# Lua 5.4.3  Copyright (C) 1994-2021 Lua.org, PUC-Rio
+$ lua54 rc4.lua
+RC4 keygen test     4.353 sec (100000 times, #key 8)
+RC4 crypt test     31.206 sec (100000 times, #key 8, #input 512)
 
-# LuaJIT 2.1.0 beta1
-$ luajit-2.1.0-beta1 rc4.lua
-RC4 keygen test     0.280 sec (100000 times, #key 8)
-RC4 crypt test      0.740 sec (100000 times, #key 8, #input 512)
+# LuaJIT 2.0.5 -- Copyright (C) 2005-2017 Mike Pall. http://luajit.org/
+$ luajit-2.0 rc4.lua
+RC4 keygen test     0.187 sec (100000 times, #key 8)
+RC4 crypt test      0.492 sec (100000 times, #key 8, #input 512)
+
+# LuaJIT 2.1.0-beta3 -- Copyright (C) 2005-2021 Mike Pall. https://luajit.org/
+$ luajit-2.1 rc4.lua
+RC4 keygen test     0.166 sec (100000 times, #key 8)
+RC4 crypt test      0.443 sec (100000 times, #key 8, #input 512)
 ```
 
 ## License
 
-Copyright (c) 2021 Cheyi Lin.
+Copyright (c) 2015-2021 Cheyi Lin.
 MIT licensed. See LICENSE for details.
